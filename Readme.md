@@ -1,7 +1,10 @@
 # 2Kasm
-### Builds specified Application(s) available as Archlinux-Kasm-DockerImage
+### Builds specified Application(s) available as Docker/Unraid Archlinux-Kasm-DockerImage
 ## https://kasmweb.com/
 ## https://www.linuxserver.io/
+
+Provides Applications as Unraid Docker and Template, it doesn't work all the time completly automatic but most of the time its good enough.
+Ironically these images can't be used in kasm directly due to /kasminit raising a sigtrap when it is autostarted.
 
 Uses PKGBUILD entries to
 - set AutoStartPaths accordingly
