@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>BASE_APPNAME</Name>
+  <Repository>felix/BASE_APPNAME</Repository>
+  <Registry/>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support/>
+  <Project/>
+  <Overview/>
+  <Category/>
+  <WebUI>http://192.168.178.120:BASE_PORT</WebUI>
+  <TemplateURL/>
+  <Icon>BASE_ICON</Icon>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled>1750794945</DateInstalled>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="Host Port 1" Target="3000" Default="BASE_PORT" Mode="tcp" Description="Webui-port" Type="Port" Display="always" Required="false" Mask="false">BASE_PORT</Config>
+  <Config Name="data" Target="/data" Default="" Mode="rw" Description="general purpose volume" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/BASE_APPNAME/data/</Config>
+  <TailscaleStateDir/>
+</Container>
