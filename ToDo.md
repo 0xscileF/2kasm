@@ -1,0 +1,4 @@
+- Create Menu entry for every program given not just the first one.
+- Cleanup Containers, as they are quite large currently.
+- Kasm API add workspace
+- checkout general kasm build / publish pipeline best practices
