@@ -1,9 +1,15 @@
 #!/bin/bash
 
+DOCKERHUB_USERNAME="0xscilef" # Remember LOWERCASE :D
 if [ ! -d "out" ]; then
 	mkdir out
 fi
-
+IS_REMOTE_APP=0
+IS_REMOTE_WEBTOP=1
+if [ "$#" -lt 2 ]; then
+    IS_REMOTE_APP=1
+    IS_REMOTE_WEBTOP=0
+fi
 checkPackage() {
 	TARGET_PACKAGE=$1
 	BASE_URL="https://archlinux.org/packages/?sort=&q="
@@ -136,6 +142,11 @@ echo "ICONURL=$ICONURL"
 
 curl -o $BUILD_DIR/root/config/nobody/novnc-16x16.png "$ICONURL"
 
+if [[ "$IS_REMOTE_WEBTOP" -eq 1 ]]; then
+	sed -i -e "s/#IS_REMOTE_WEBTOP//g" $BUILD_DIR/Dockerfile
+else
+	sed -i -e "s/#IS_REMOTE_APP//g" $BUILD_DIR/Dockerfile
+fi
 sed -i -e "s/BASE_APPNAME/$SHORT_NAME/g" $BUILD_DIR/root/defaults/menu.xml
 sed -i -e "s|EXEC_PATH|$EXEC_PATH|g" $BUILD_DIR/root/defaults/menu.xml
 sed -i -e "s/OMNI_PKG/$OMNI_PKG/g" $BUILD_DIR/Dockerfile
@@ -145,7 +156,7 @@ sed -i -e "s|EXEC_PATH|$EXEC_PATH|g" $BUILD_DIR/root/defaults/autostart
 # sed -i -e "s/PACMAN_PKG/$PACMAN_PKG/g" $BUILD_DIR/Dockerfile
 # sed -i -e "s/YAY_PKG/$YAY_PKG/g" $BUILD_DIR/Dockerfile
 
-# keep track of used docker ports in list and set them accordingly in template file
+# keep track of used podman ports in list and set them accordingly in template file
 NEXTPORT=$(expr $(cat ports) + 1)
 
 # Update Template.xml
@@ -155,9 +166,11 @@ sed -i -e "s|BASE_ICON|$ICONURL|g" $BUILD_DIR/$TOINSTALL.xml
 
 cd $BUILD_DIR
 
-docker build -t felix/$TOINSTALL .
+podman build -t $DOCKERHUB_USERNAME/$TOINSTALL .
+podman push $DOCKERHUB_USERNAME/$TOINSTALL
+exit
 # Maybe omit the run command and just past the xml?
-# docker run -d -p 5900:5900 -p 6080:6080 --name=$TOINSTALL --security-opt seccomp=unconfined -v /mnt/user/appdata/data:/data -v /mnt/user/appdata/felix-$TOINSTALL:/config -v /etc/localtime:/etc/localtime:ro -e WEBPAGE_TITLE=$TOINSTALL -e VNC_PASSWORD=mypassword -e UMASK=000 -e PUID=99 -e PGID=100 felix/$TOINSTALL
+# podman run -d -p 5900:5900 -p 6080:6080 --name=$TOINSTALL --security-opt seccomp=unconfined -v /mnt/user/appdata/data:/data -v /mnt/user/appdata/$DOCKERHUB_USERNAME-$TOINSTALL:/config -v /etc/localtime:/etc/localtime:ro -e WEBPAGE_TITLE=$TOINSTALL -e VNC_PASSWORD=mypassword -e UMASK=000 -e PUID=99 -e PGID=100 $DOCKERHUB_USERNAME/$TOINSTALL
 
 cd $BASEDIR
 
@@ -165,10 +178,10 @@ if [ ! -d "/boot/config/plugins/dockerMan/templates-user/" ]; then
 	echo "Not an unraid system."
 	# --security-opt seccomp=unconfined
 	echo "Run minimaly using:"
-	echo "docker run -d -p $NEXTPORT:3000 --name=$TOINSTALL  -v /etc/localtime:/etc/localtime:ro felix/$TOINSTALL"
+	echo "podman run -d -p $NEXTPORT:3000 --name=$TOINSTALL  -v /etc/localtime:/etc/localtime:ro $DOCKERHUB_USERNAME/$TOINSTALL"
 else
 	cp $BUILD_DIR/$TOINSTALL.xml /boot/config/plugins/dockerMan/templates-user/my-.xml
-	ehco "The Template: felix-$TOINSTALL has benn added."
+	ehco "The Template: $DOCKERHUB_USERNAME-$TOINSTALL has benn added."
 fi
 echo $NEXTPORT >ports
 exit

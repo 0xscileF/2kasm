@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:arch
+#IS_REMOTE_APP FROM ghcr.io/linuxserver/baseimage-kasmvnc:arch
 #IS_REMOTE_WEBTOP FROM lscr.io/linuxserver/webtop:arch-openbox
 RUN pacman -Syu --noconfirm && pacman -S --noconfirm base-devel git
 RUN mkdir -p /tmp/yay-build
