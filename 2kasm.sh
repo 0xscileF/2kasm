@@ -156,7 +156,7 @@ sed -i -e "s|EXEC_PATH|$EXEC_PATH|g" $BUILD_DIR/root/defaults/autostart
 # sed -i -e "s/PACMAN_PKG/$PACMAN_PKG/g" $BUILD_DIR/Dockerfile
 # sed -i -e "s/YAY_PKG/$YAY_PKG/g" $BUILD_DIR/Dockerfile
 
-# keep track of used podman ports in list and set them accordingly in template file
+# keep track of used docker ports in list and set them accordingly in template file
 NEXTPORT=$(expr $(cat ports) + 1)
 
 # Update Template.xml
@@ -166,11 +166,12 @@ sed -i -e "s|BASE_ICON|$ICONURL|g" $BUILD_DIR/$TOINSTALL.xml
 
 cd $BUILD_DIR
 
-podman build -t $DOCKERHUB_USERNAME/$TOINSTALL .
-podman push $DOCKERHUB_USERNAME/$TOINSTALL
+docker build -t $DOCKERHUB_USERNAME/$TOINSTALL .
+docker push $DOCKERHUB_USERNAME/$TOINSTALL
+
 exit
 # Maybe omit the run command and just past the xml?
-# podman run -d -p 5900:5900 -p 6080:6080 --name=$TOINSTALL --security-opt seccomp=unconfined -v /mnt/user/appdata/data:/data -v /mnt/user/appdata/$DOCKERHUB_USERNAME-$TOINSTALL:/config -v /etc/localtime:/etc/localtime:ro -e WEBPAGE_TITLE=$TOINSTALL -e VNC_PASSWORD=mypassword -e UMASK=000 -e PUID=99 -e PGID=100 $DOCKERHUB_USERNAME/$TOINSTALL
+# docker run -d -p 5900:5900 -p 6080:6080 --name=$TOINSTALL --security-opt seccomp=unconfined -v /mnt/user/appdata/data:/data -v /mnt/user/appdata/$DOCKERHUB_USERNAME-$TOINSTALL:/config -v /etc/localtime:/etc/localtime:ro -e WEBPAGE_TITLE=$TOINSTALL -e VNC_PASSWORD=mypassword -e UMASK=000 -e PUID=99 -e PGID=100 $DOCKERHUB_USERNAME/$TOINSTALL
 
 cd $BASEDIR
 
@@ -178,7 +179,7 @@ if [ ! -d "/boot/config/plugins/dockerMan/templates-user/" ]; then
 	echo "Not an unraid system."
 	# --security-opt seccomp=unconfined
 	echo "Run minimaly using:"
-	echo "podman run -d -p $NEXTPORT:3000 --name=$TOINSTALL  -v /etc/localtime:/etc/localtime:ro $DOCKERHUB_USERNAME/$TOINSTALL"
+	echo "docker run -d -p $NEXTPORT:3000 --name=$TOINSTALL  -v /etc/localtime:/etc/localtime:ro $DOCKERHUB_USERNAME/$TOINSTALL"
 else
 	cp $BUILD_DIR/$TOINSTALL.xml /boot/config/plugins/dockerMan/templates-user/my-.xml
 	ehco "The Template: $DOCKERHUB_USERNAME-$TOINSTALL has benn added."
