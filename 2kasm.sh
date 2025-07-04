@@ -169,7 +169,6 @@ cd $BUILD_DIR
 docker build -t $DOCKERHUB_USERNAME/$TOINSTALL .
 docker push $DOCKERHUB_USERNAME/$TOINSTALL
 
-exit
 # Maybe omit the run command and just past the xml?
 # docker run -d -p 5900:5900 -p 6080:6080 --name=$TOINSTALL --security-opt seccomp=unconfined -v /mnt/user/appdata/data:/data -v /mnt/user/appdata/$DOCKERHUB_USERNAME-$TOINSTALL:/config -v /etc/localtime:/etc/localtime:ro -e WEBPAGE_TITLE=$TOINSTALL -e VNC_PASSWORD=mypassword -e UMASK=000 -e PUID=99 -e PGID=100 $DOCKERHUB_USERNAME/$TOINSTALL
 
