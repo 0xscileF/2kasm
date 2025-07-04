@@ -181,7 +181,7 @@ if [ ! -d "/boot/config/plugins/dockerMan/templates-user/" ]; then
 	echo "docker run -d -p $NEXTPORT:3000 --name=$TOINSTALL  -v /etc/localtime:/etc/localtime:ro $DOCKERHUB_USERNAME/$TOINSTALL"
 else
 	cp $BUILD_DIR/$TOINSTALL.xml /boot/config/plugins/dockerMan/templates-user/my-.xml
-	ehco "The Template: $DOCKERHUB_USERNAME-$TOINSTALL has benn added."
+	echo "The Template: $DOCKERHUB_USERNAME-$TOINSTALL has benn added."
 fi
 echo $NEXTPORT >ports
 exit
